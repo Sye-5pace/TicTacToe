@@ -1,1 +1,29 @@
-<p>game-menu works!</p>
+<main class="border-saffron border-2 w-[28.75rem] h-[29.4375rem] flex-col flex items-center gap-[2.25rem]">
+    <img src="../../../assets/images/logo-group.svg" alt="logo">
+    <section class="text-casper text-center bg-tepapagreen h-[12.8125rem] w-full rounded-[0.9375rem] shadow-[#10212A] shadow-inner-bottom pt-6 px-6 flex flex-col gap-6">
+      <h3 class="text-[1rem] font-bold">PICK PLAYER 1'S MARK</h3>
+      <div class="flex flex-col gap-[1.0625rem]">
+        <div class="rounded-[0.625rem] py-[.5625rem] font-varelaround px-[.5rem] bg-mirage h-[4.5rem] flex items-center *:flex-1 *:h-full *:flex *:justify-center *:items-center *:rounded-[0.625rem] *:cursor-pointer">
+          <div [class]="markXSelected ? 'bg-casper text-mirage':'hover:bg-casper hover:bg-opacity-5'"
+            (click)="selectMark('x')">
+            <p class="font-black text-[3.25rem]">x</p>
+          </div>
+          <div [class]="markOSelected ? 'bg-casper text-mirage':'hover:bg-casper hover:bg-opacity-5'"
+           (click)="selectMark('o')">
+            <p class="font-black text-[3.25rem]">o</p>
+          </div>
+
+        </div>
+        <p class="font-medium text-[0.875rem] tracking-[.055rem] opacity-50">REMEMBER : X GOES FIRST</p>
+      </div>
+    </section>
+    <section class="flex flex-col gap-5 text-mirage font-bold text-[1.125rem] w-full *:h-[4.1875rem] *:rounded-[0.9375rem] *:shadow-inner-bottom">
+      <button class="bg-saffron">
+        NEW GAME (VS CPU)
+      </button>
+      <button class="bg-turquoise">
+        NEW GAME (VS PLAYER)
+      </button>
+    </section>
+</main>
+
