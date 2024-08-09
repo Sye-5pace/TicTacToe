@@ -15,7 +15,9 @@ module.exports = {
       'botticelli':'#DBE8ED',
       'goldentainoi':'#FFC860',
       'saffron':'#F2B137',
+      'turquoiseblue':'#65E9E4',
       'turquoise':'#31C3BD',
+
     },
     screens:{
       'mobile': {'min':'200px','max':'427px'},
