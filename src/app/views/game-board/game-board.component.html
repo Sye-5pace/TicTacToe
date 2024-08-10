@@ -1,1 +1,49 @@
-<p>game-board works!</p>
+<main class="flex flex-col gap-y-[1.85rem] w-[28.75rem] ">
+  <header class="flex justify-between  items-center">
+    <div class="flex gap-2 h-[1.9375rem]">
+      <img src="../../../assets/images/Logo-1.svg" class="anime-logo-1" alt="logo">
+      <img src="../../../assets/images/Logo-2.svg" class="anime-logo-2" alt="logo">
+    </div>
+    <div class="bg-tepapagreen shadow-inner-bottom w-[8.75rem] h-[3.25rem] rounded-[.625rem] flex  items-center justify-center gap-2 py-1">
+      <span class=" font-varelaround font-black text-[2rem] mb-3">x</span>
+      <span class="mb-2">TURN</span>
+    </div>
+    <button class="shadow-inner-bottom flex items-center justify-center  size-[3.25rem] bg-casper rounded-[.625rem]" title="redo">
+      <img src="../../../assets/images/Redo.svg" class="size-[1.25rem]" alt="">
+    </button>
+  </header>
+  <section class="flex flex-col gap-y-[1rem]">
+    <div class="grid grid-cols-3 gap-4 *:h-[8.75rem] *:bg-tepapagreen *:shadow-inner-bottom *:rounded-[.625rem] *:text-center">
+      <div>1</div>
+      <div>2</div>
+      <div>3</div>
+      <div>4</div>
+      <div>5</div>
+      <div>6</div>
+      <div>7</div>
+      <div>8</div>
+      <div>9</div>
+    </div>
+    <div class="grid grid-cols-3 gap-4 *:rounded-[.9375rem] *:h-[4.5rem] text-mirage *:flex *:justify-center ">
+      <div class="bg-turquoise">
+        <div class="score">
+          <p>X(YOU)</p>
+          <h3>0</h3>
+        </div>
+      </div>
+      <div class="bg-casper">
+        <div class="score">
+          <p>TIES</p>
+          <h3>0</h3>
+        </div>
+      </div>
+      <div class="bg-saffron">
+        <div class="score">
+          <p>O(CPU)</p>
+          <h3>0</h3>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- <section></section> -->
+</main>

@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import anime from 'animejs/lib/anime.es.js';
 
 @Component({
   selector: 'app-game-menu',
   standalone: true,
-  imports: [],
+  imports: [RouterLink],
   templateUrl: './game-menu.component.html',
   styleUrl: './game-menu.component.css'
 })
@@ -12,14 +13,16 @@ import anime from 'animejs/lib/anime.es.js';
 export class GameMenuComponent {
   markXSelected: boolean = false;
   markOSelected: boolean = true;
-
+  markSelected: string =  'o';
   selectMark(mark: string){
     if(mark === 'x'){
       this.markXSelected = !this.markXSelected;
       this.markOSelected = false;
+      this.markSelected = mark;
     }else if(mark === 'o'){
       this.markOSelected =!this.markOSelected;
       this.markXSelected = false;
+      this.markSelected = mark;
     }
   }
 
@@ -29,7 +32,7 @@ export class GameMenuComponent {
       translateY: [ -250, 0 ],
       duration: 2000,
       delay: 2000,
-      opacity: [0, 1]
+      opacity: [0, 1],
     })
     anime({
       targets: '.anime-logo-2',
