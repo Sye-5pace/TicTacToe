@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import anime from 'animejs/lib/anime.es.js'
+import { GameTurnsService } from '../../services/game-turns.service';
 
 @Component({
   selector: 'app-game-board',
@@ -10,11 +11,25 @@ import anime from 'animejs/lib/anime.es.js'
 })
 
 export class GameBoardComponent {
+  cpuChoice: string | null = null ;
+  playerChoice: string | null = null ;
+
+  constructor(private gameTurns: GameTurnsService){}
+
   animations = [
     { target: 'header', delay: 500 },
     { target: '.anime-logo-2', delay: 700 },
     { target: '.anime-logo-1', delay: 750 },
   ];
+
+  ngOnInit(){
+    this.gameTurns.currentPlayerChoice$.subscribe(choice => {
+      this.playerChoice = choice;
+    })
+    this.gameTurns.cpuChoice$.subscribe(choice => {
+      this.cpuChoice = choice;
+    })
+  }
 
   ngAfterViewInit() {
     const timeline = anime.timeline({

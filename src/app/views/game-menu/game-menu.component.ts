@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import anime from 'animejs/lib/anime.es.js';
+import { GameTurnsService } from '../../services/game-turns.service';
 
 @Component({
   selector: 'app-game-menu',
@@ -13,16 +14,20 @@ import anime from 'animejs/lib/anime.es.js';
 export class GameMenuComponent {
   markXSelected: boolean = false;
   markOSelected: boolean = true;
-  markSelected: string =  'o';
+
+
+  constructor(private gameTurns: GameTurnsService){}
+
+
   selectMark(mark: string){
     if(mark === 'x'){
       this.markXSelected = !this.markXSelected;
       this.markOSelected = false;
-      this.markSelected = mark;
+      this.gameTurns.setPlayerChoice(mark);
     }else if(mark === 'o'){
       this.markOSelected =!this.markOSelected;
       this.markXSelected = false;
-      this.markSelected = mark;
+      this.gameTurns.setPlayerChoice(mark);
     }
   }
 
