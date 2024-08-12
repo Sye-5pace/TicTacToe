@@ -8,21 +8,27 @@
       <span class=" font-varelaround font-black text-[2rem] mb-3">{{ turn$ | async }}</span>
       <span class="mb-2">TURN</span>
     </div>
-    <button class="shadow-inner-bottom flex items-center justify-center  size-[3.25rem] bg-casper rounded-[.625rem]" title="redo">
+    <button class="shadow-inner-bottom flex items-center justify-center  size-[3.25rem] bg-casper rounded-[.625rem]" title="restart" >
       <img src="../../../assets/images/Redo.svg" class="size-[1.25rem]" alt="">
     </button>
   </header>
   <section class="flex flex-col gap-y-[1rem]">
     <div class="grid grid-cols-3 gap-4 *:h-[8.75rem] *:bg-tepapagreen *:shadow-inner-bottom *:rounded-[.625rem] *:text-center *:cursor-pointer mark-container">
-      <div class="mark-tile" (click)="makeChoice()">1</div>
-      <div class="mark-tile" (click)="makeChoice()">2</div>
-      <div class="mark-tile" (click)="makeChoice()">3</div>
-      <div class="mark-tile" (click)="makeChoice()">4</div>
-      <div class="mark-tile" (click)="makeChoice()">5</div>
-      <div class="mark-tile" (click)="makeChoice()">6</div>
-      <div class="mark-tile" (click)="makeChoice()">7</div>
-      <div class="mark-tile" (click)="makeChoice()">8</div>
-      <div class="mark-tile" (click)="makeChoice()">9</div>
+      @for(tile of tiles; track tile; let i = $index){
+        <div class="mark-tile flex items-center justify-center" (click)="makeChoice(i)">
+          @if(tile === 'x'){
+            <div class="font-varelaround font-black text-[5rem] mb-3 text-turquoise">
+              x
+            </div>
+          } @else if ( tile === 'o' ) {
+            <div class="font-varelaround font-black text-[5rem] mb-3 text-saffron">
+              o
+            </div>
+          }
+        </div>
+      } @empty {
+        <li>loading</li>
+      }
     </div>
     <div class="grid grid-cols-3 gap-4 *:rounded-[.9375rem] *:h-[4.5rem] text-mirage *:flex *:justify-center score-bar overflow-hidden">
       <div class="bg-turquoise">

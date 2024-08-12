@@ -8,24 +8,21 @@ import { GameTurnsService } from './game-turns.service';
 
 export class SoloGamemodeService {
   private static TURN_KEY = 'gameTurn';
-  private static MARK_X_KEY = 'markX';
-  private static MARK_O_KEY = 'markO';
-  private gameTurn = new BehaviorSubject<string>(this.loadFromLocalStorage(SoloGamemodeService.TURN_KEY) || 'x');
-  private markXRead = new BehaviorSubject<boolean>(this.loadFromLocalStorage(SoloGamemodeService.MARK_X_KEY) === 'true');
-  private markORead = new BehaviorSubject<boolean>(this.loadFromLocalStorage(SoloGamemodeService.MARK_O_KEY) === 'true');
+  public gameTurn = new BehaviorSubject<string>(this.loadFromLocalStorage(SoloGamemodeService.TURN_KEY) || 'x');
+
 
   turn$ = this.gameTurn.asObservable();
-  markX$ = this.markXRead.asObservable();
-  markO$ = this.markORead.asObservable();
   playerChoice: string | null = null;
   cpuChoice: string | null = null;
 
   constructor(private gameTurnsService: GameTurnsService) {
     this.gameTurnsService.currentPlayerChoice$.subscribe(choice => {
       this.playerChoice = choice;
+      console.log('playerChoice from solo-gamemode: ' + this.playerChoice);
     });
     this.gameTurnsService.cpuChoice$.subscribe(choice => {
       this.cpuChoice = choice;
+      console.log('cpuChoice from solo-gamemode: ' + this.cpuChoice);
     });
     this.gameTurn.subscribe(turn => {
       this.saveToLocalStorage(SoloGamemodeService.TURN_KEY, turn);
@@ -40,6 +37,10 @@ export class SoloGamemodeService {
     localStorage.setItem(key, value);
   }
 
+  private removeFromLocalStorage(key: string): void {
+    localStorage.removeItem(key);
+  }
+
   toggleTurn() {
     const newTurn = this.gameTurn.getValue() === 'x' ? 'o' : 'x';
     this.gameTurn.next(newTurn);
@@ -47,35 +48,14 @@ export class SoloGamemodeService {
 
   makeChoice() {
     const currentTurn = this.gameTurn.getValue();
-    if (currentTurn === this.playerChoice) {
-      if (currentTurn === 'x') {
-        this.markXRead.next(true);
-        this.markORead.next(false);
-      } else if (currentTurn === 'o') {
-        this.markORead.next(true);
-        this.markXRead.next(false);
-      }
-      this.saveToLocalStorage(SoloGamemodeService.MARK_X_KEY, this.markXRead.getValue().toString());
-      this.saveToLocalStorage(SoloGamemodeService.MARK_O_KEY, this.markORead.getValue().toString());
-      console.log(`The Turn is playerChoice = ${currentTurn}`);
-      console.log(`markXRead: ${this.markXRead.getValue()}`);
-      console.log(`markORead: ${this.markORead.getValue()}`);
+    if(currentTurn === this.playerChoice || currentTurn === this.cpuChoice) {
+      this.toggleTurn();
     }
+  }
 
-    if (currentTurn === this.cpuChoice) {
-      if (currentTurn === 'x') {
-        this.markXRead.next(true);
-        this.markORead.next(false);
-      } else if (currentTurn === 'o') {
-        this.markORead.next(true);
-        this.markXRead.next(false);
-      }
-      this.saveToLocalStorage(SoloGamemodeService.MARK_X_KEY, this.markXRead.getValue().toString());
-      this.saveToLocalStorage(SoloGamemodeService.MARK_O_KEY, this.markORead.getValue().toString());
-      console.log(`The Turn is CPU = ${currentTurn}`);
-      console.log(`markXRead: ${this.markXRead.getValue()}`);
-      console.log(`markORead: ${this.markORead.getValue()}`);
-    }
-    this.toggleTurn();
+  resetGame() {
+    this.gameTurn.next('x');
+        // Clear localStorage
+    this.removeFromLocalStorage(SoloGamemodeService.TURN_KEY);
   }
 }

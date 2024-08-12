@@ -13,7 +13,7 @@ export class GameTurnsService {
 
   currentPlayerChoice$ = this.playerChoiceSource.asObservable();
   cpuChoice$ = this.cpuChoiceSource.asObservable();
-
+  
   constructor() {
     this.loadInitialChoices();
   }
@@ -49,10 +49,10 @@ export class GameTurnsService {
   }
 
 
-  // resetChoices(): void {
-  //   this.playerChoiceSource.next(null);
-  //   this.cpuChoiceSource.next(null);
-  //   this.saveToLocalStorage(GameTurnsService.PLAYER_CHOICE_KEY, null);
-  //   this.saveToLocalStorage(GameTurnsService.CPU_CHOICE_KEY, null);
-  // }
+  resetChoices(): void {
+    this.playerChoiceSource.next(null);
+    this.cpuChoiceSource.next(null);
+    this.saveToLocalStorage(GameTurnsService.PLAYER_CHOICE_KEY, null);
+    this.saveToLocalStorage(GameTurnsService.CPU_CHOICE_KEY, null);
+  }
 }

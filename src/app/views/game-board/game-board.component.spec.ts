@@ -11,7 +11,7 @@ describe('GameBoardComponent', () => {
       imports: [GameBoardComponent]
     })
     .compileComponents();
-    
+
     fixture = TestBed.createComponent(GameBoardComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

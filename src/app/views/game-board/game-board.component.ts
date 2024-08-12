@@ -13,11 +13,12 @@ import { GameTurnsService } from '../../services/game-turns.service';
 })
 
 export class GameBoardComponent {
+  tiles: string[] = Array(9).fill(null)
   cpuChoice: string | null = null ;
   playerChoice: string | null = null ;
   turn$ = this.soloModeService.turn$
-  markX$ = this.soloModeService.markX$
-  markO$ = this.soloModeService.markO$
+
+  private static TILES_KEY = 'gameTiles';
 
 
   constructor(private gameTurns: GameTurnsService, private soloModeService: SoloGamemodeService ){}
@@ -29,9 +30,12 @@ export class GameBoardComponent {
   ];
 
   ngOnInit(){
+    this.loadTilesFromLocalStorage();
+
     this.gameTurns.currentPlayerChoice$.subscribe(choice => {
       this.playerChoice = choice;
     })
+
     this.gameTurns.cpuChoice$.subscribe(choice => {
       this.cpuChoice = choice;
     })
@@ -68,13 +72,32 @@ export class GameBoardComponent {
     })
   }
 
+  makeChoice(index: number): void {
+    const currentTurn = this.soloModeService.gameTurn.getValue();
+    if(this.tiles[index] !== null) return;
 
-  // a function that checks the turn value or who's next then
-  // display the mark per the turn where clicked that's a user/player
-  // but if the turn is the for the CPU then call a cpu make choice function
-  // to pass it's mark into any of the nine boxes
-
-  makeChoice(): void {
-    this.soloModeService.makeChoice()
+    if(currentTurn === this.playerChoice || currentTurn === this.cpuChoice){
+      this.tiles[index] = currentTurn;
+      this.saveTilesToLocalStorage();
+      this.soloModeService.makeChoice();
+    }
   }
+
+  private loadTilesFromLocalStorage(): void{
+    const savedTiles = localStorage.getItem(GameBoardComponent.TILES_KEY);
+    if(savedTiles){
+      this.tiles = JSON.parse(savedTiles);
+    }
+  }
+
+  private saveTilesToLocalStorage(): void{
+    localStorage.setItem(GameBoardComponent.TILES_KEY, JSON.stringify(this.tiles));
+  }
+
+  // restart(){
+  //   this.tiles.fill('')
+  //   this.saveTilesToLocalStorage();
+  //   this.gameTurns.resetChoices()
+  //   this.soloModeService.resetGame()
+  // }
 }
