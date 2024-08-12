@@ -13,7 +13,7 @@ export class gameboardGuard implements CanActivate{
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot):
    Observable<boolean> | Promise<boolean> | boolean {
-    if(!this.gameTurnsService.playerChoiceSource.getValue() || !this.gameTurnsService.cpuChoiceSource.getValue() ){
+    if(!this.gameTurnsService.playerChoiceSource.getValue() || !this.gameTurnsService.cpuChoiceSource.getValue()){
       this.router.navigate(['/']);
       return false;
     }

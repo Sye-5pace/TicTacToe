@@ -10,7 +10,6 @@ export class SoloGamemodeService {
   private static TURN_KEY = 'gameTurn';
   public gameTurn = new BehaviorSubject<string>(this.loadFromLocalStorage(SoloGamemodeService.TURN_KEY) || 'x');
 
-
   turn$ = this.gameTurn.asObservable();
   playerChoice: string | null = null;
   cpuChoice: string | null = null;
@@ -41,14 +40,20 @@ export class SoloGamemodeService {
     localStorage.removeItem(key);
   }
 
+  isCPUTurn(): boolean {
+    return this.gameTurn.getValue() === this.cpuChoice
+  }
+
   toggleTurn() {
     const newTurn = this.gameTurn.getValue() === 'x' ? 'o' : 'x';
     this.gameTurn.next(newTurn);
   }
 
-  makeChoice() {
+  makeChoice(CPUMove: boolean = false) {
     const currentTurn = this.gameTurn.getValue();
-    if(currentTurn === this.playerChoice || currentTurn === this.cpuChoice) {
+    if(!CPUMove && currentTurn === this.playerChoice){
+      this.toggleTurn();
+    } else if(CPUMove && currentTurn === this.cpuChoice){
       this.toggleTurn();
     }
   }

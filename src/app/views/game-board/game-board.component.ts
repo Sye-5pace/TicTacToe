@@ -13,9 +13,9 @@ import { GameTurnsService } from '../../services/game-turns.service';
 })
 
 export class GameBoardComponent {
-  tiles: string[] = Array(9).fill(null)
-  cpuChoice: string | null = null ;
-  playerChoice: string | null = null ;
+  tiles: string[]  = Array(9).fill(null)
+  cpuChoice: any  = '' ;
+  playerChoice: any = '' ;
   turn$ = this.soloModeService.turn$
 
   private static TILES_KEY = 'gameTiles';
@@ -81,6 +81,25 @@ export class GameBoardComponent {
       this.saveTilesToLocalStorage();
       this.soloModeService.makeChoice();
     }
+
+    if(this.soloModeService.isCPUTurn()){
+      setTimeout(() => {
+        this.cpuMakeMove();
+      },2000)
+    }
+  }
+
+  cpuMakeMove():void{
+    const emptyTiles = this.tiles
+    .map((tile, index) => (tile === null ? index : null))
+    .filter((index) => index !==null)
+
+    if(emptyTiles.length > 0){
+      const randomIndex: any = emptyTiles[Math.floor(Math.random() * emptyTiles.length)]
+      this.tiles[randomIndex] = this.cpuChoice;
+      this.saveTilesToLocalStorage();
+      this.soloModeService.makeChoice(true);
+    }
   }
 
   private loadTilesFromLocalStorage(): void{
@@ -93,6 +112,7 @@ export class GameBoardComponent {
   private saveTilesToLocalStorage(): void{
     localStorage.setItem(GameBoardComponent.TILES_KEY, JSON.stringify(this.tiles));
   }
+
 
   // restart(){
   //   this.tiles.fill('')
