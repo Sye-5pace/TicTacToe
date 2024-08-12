@@ -39,6 +39,12 @@ export class GameBoardComponent {
     this.gameTurns.cpuChoice$.subscribe(choice => {
       this.cpuChoice = choice;
     })
+
+    if(this.soloModeService.isCPUTurn()){
+      setTimeout(() => {
+        this.cpuMakeMove();
+      },5000)
+    }
   }
 
   ngAfterViewInit() {
