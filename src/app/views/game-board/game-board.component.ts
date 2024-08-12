@@ -1,11 +1,13 @@
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import anime from 'animejs/lib/anime.es.js'
+import { SoloGamemodeService } from '../../services/solo-gamemode.service';
 import { GameTurnsService } from '../../services/game-turns.service';
 
 @Component({
   selector: 'app-game-board',
   standalone: true,
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './game-board.component.html',
   styleUrl: './game-board.component.css'
 })
@@ -13,14 +15,17 @@ import { GameTurnsService } from '../../services/game-turns.service';
 export class GameBoardComponent {
   cpuChoice: string | null = null ;
   playerChoice: string | null = null ;
-  mark: string = 'x'
+  turn$ = this.soloModeService.turn$
+  markX$ = this.soloModeService.markX$
+  markO$ = this.soloModeService.markO$
 
-  constructor(private gameTurns: GameTurnsService){}
+
+  constructor(private gameTurns: GameTurnsService, private soloModeService: SoloGamemodeService ){}
 
   animations = [
     { target: 'header', delay: 500 },
     { target: '.anime-logo-2', delay: 600 },
-    { target: '.anime-logo-1', delay: 700 },
+    { target: '.anime-logo-1', delay: 700 }
   ];
 
   ngOnInit(){
@@ -69,7 +74,7 @@ export class GameBoardComponent {
   // but if the turn is the for the CPU then call a cpu make choice function
   // to pass it's mark into any of the nine boxes
 
-  makeChoice(choice: string): void {
-
+  makeChoice(): void {
+    this.soloModeService.makeChoice()
   }
 }
