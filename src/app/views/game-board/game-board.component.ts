@@ -13,13 +13,14 @@ import { GameTurnsService } from '../../services/game-turns.service';
 export class GameBoardComponent {
   cpuChoice: string | null = null ;
   playerChoice: string | null = null ;
+  mark: string = 'x'
 
   constructor(private gameTurns: GameTurnsService){}
 
   animations = [
     { target: 'header', delay: 500 },
-    { target: '.anime-logo-2', delay: 700 },
-    { target: '.anime-logo-1', delay: 750 },
+    { target: '.anime-logo-2', delay: 600 },
+    { target: '.anime-logo-1', delay: 700 },
   ];
 
   ngOnInit(){
@@ -33,25 +34,25 @@ export class GameBoardComponent {
 
   ngAfterViewInit() {
     const timeline = anime.timeline({
-      duration: 1000,
+      duration: 800,
     })
 
     this.animations.forEach(({ target, delay }) => {
       timeline.add({
-        duration: 900,
+        duration: 600,
         targets: target,
-        translateX: [-350, 0],
+        translateX: [-400, 0],
         offset: delay,
         opacity: [0, 1],
       })
     });
     timeline.add({
       targets: '.mark-container .mark-tile',
-      translateX: [350, 0],
+      translateX: [400, 0],
       opacity: [0, 1],
       easing: 'easeOutBounce',
-      delay: anime.stagger(200),
-      offset: '+=100'
+      delay: anime.stagger(100),
+      offset: '+=50'
     });
     timeline.add({
       targets: '.score-bar',
@@ -60,5 +61,15 @@ export class GameBoardComponent {
       opacity: [0, 1],
       offset: '+=200'
     })
+  }
+
+
+  // a function that checks the turn value or who's next then
+  // display the mark per the turn where clicked that's a user/player
+  // but if the turn is the for the CPU then call a cpu make choice function
+  // to pass it's mark into any of the nine boxes
+
+  makeChoice(choice: string): void {
+
   }
 }
