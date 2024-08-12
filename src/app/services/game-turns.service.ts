@@ -8,12 +8,12 @@ export class GameTurnsService {
   private static PLAYER_CHOICE_KEY = 'playerChoice';
   private static CPU_CHOICE_KEY = 'cpuChoice';
 
-  private playerChoiceSource = new BehaviorSubject<string|null>(this.loadFromLocalStorage(GameTurnsService.PLAYER_CHOICE_KEY));
-  private cpuChoiceSource = new BehaviorSubject<string|null>(this.loadFromLocalStorage(GameTurnsService.CPU_CHOICE_KEY));
+  public playerChoiceSource = new BehaviorSubject<string|null>(this.loadFromLocalStorage(GameTurnsService.PLAYER_CHOICE_KEY));
+  public cpuChoiceSource = new BehaviorSubject<string|null>(this.loadFromLocalStorage(GameTurnsService.CPU_CHOICE_KEY));
 
   currentPlayerChoice$ = this.playerChoiceSource.asObservable();
   cpuChoice$ = this.cpuChoiceSource.asObservable();
-  
+
   constructor() {
     this.loadInitialChoices();
   }

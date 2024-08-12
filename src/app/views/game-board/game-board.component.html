@@ -17,7 +17,7 @@
       @for(tile of tiles; track tile; let i = $index){
         <div class="mark-tile flex items-center justify-center" (click)="makeChoice(i)">
           @if(tile === 'x'){
-            <div class="font-varelaround font-black text-[5rem] mb-3 text-turquoise">
+            <div class="font-varelaround font-black text-[5rem] mb-3 text-turquoise ">
               x
             </div>
           } @else if ( tile === 'o' ) {
