@@ -1,11 +1,16 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { GameTurnsService } from './game-turns.service';
+import {
+  findWinningMove,
+  findBestStrategicMove,
+  getAvailableMoves,
+  getRandomMove
+} from '../helpers/cpu-strategy-helpers';
 
 @Injectable({
   providedIn: 'root'
 })
-
 export class SoloGamemodeService {
   private static TURN_KEY = 'gameTurn';
   public gameTurn = new BehaviorSubject<string>(this.loadFromLocalStorage(SoloGamemodeService.TURN_KEY) || 'x');
@@ -17,11 +22,9 @@ export class SoloGamemodeService {
   constructor(private gameTurnsService: GameTurnsService) {
     this.gameTurnsService.currentPlayerChoice$.subscribe(choice => {
       this.playerChoice = choice;
-      console.log('playerChoice from solo-gamemode: ' + this.playerChoice);
     });
     this.gameTurnsService.cpuChoice$.subscribe(choice => {
       this.cpuChoice = choice;
-      console.log('cpuChoice from solo-gamemode: ' + this.cpuChoice);
     });
     this.gameTurn.subscribe(turn => {
       this.saveToLocalStorage(SoloGamemodeService.TURN_KEY, turn);
@@ -41,7 +44,7 @@ export class SoloGamemodeService {
   }
 
   isCPUTurn(): boolean {
-    return this.gameTurn.getValue() === this.cpuChoice
+    return this.gameTurn.getValue() === this.cpuChoice;
   }
 
   toggleTurn() {
@@ -51,16 +54,37 @@ export class SoloGamemodeService {
 
   makeChoice(CPUMove: boolean = false) {
     const currentTurn = this.gameTurn.getValue();
-    if(!CPUMove && currentTurn === this.playerChoice){
+    if (!CPUMove && currentTurn === this.playerChoice) {
       this.toggleTurn();
-    } else if(CPUMove && currentTurn === this.cpuChoice){
+    } else if (CPUMove && currentTurn === this.cpuChoice) {
       this.toggleTurn();
     }
   }
 
+
+  cpuMakeMove(tiles: string[]): number {
+    const availableMoves = getAvailableMoves(tiles);
+
+    const winningMove = findWinningMove(tiles, this.cpuChoice!, availableMoves);
+    if (winningMove !== null) {
+      return winningMove;
+    }
+
+    const blockingMove = findWinningMove(tiles, this.playerChoice!, availableMoves);
+    if (blockingMove !== null) {
+      return blockingMove;
+    }
+
+    const bestStrategicMove = findBestStrategicMove(availableMoves);
+    if (bestStrategicMove !== null) {
+      return bestStrategicMove;
+    }
+
+    return getRandomMove(availableMoves);
+  }
+
   resetGame() {
     this.gameTurn.next('x');
-        // Clear localStorage
     this.removeFromLocalStorage(SoloGamemodeService.TURN_KEY);
   }
 }
