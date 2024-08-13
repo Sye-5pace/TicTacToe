@@ -3,28 +3,35 @@ import { CommonModule } from '@angular/common';
 import anime from 'animejs/lib/anime.es.js';
 import { SoloGamemodeService } from '../../services/solo-gamemode.service';
 import { GameTurnsService } from '../../services/game-turns.service';
+import { GameOutcomeService } from '../../services/game-outcome.service';
 
 @Component({
   selector: 'app-game-board',
   standalone: true,
   imports: [CommonModule],
   templateUrl: './game-board.component.html',
-  styleUrl: './game-board.component.css'
+  styleUrls: ['./game-board.component.css']
 })
 export class GameBoardComponent {
   tiles: string[] = Array(9).fill(null);
   cpuChoice: string | null = '';
   playerChoice: string | null = '';
   turn$ = this.soloModeService.turn$;
+  winningPositions: number[] | null = null;
 
-  private static TILES_KEY = 'gameTiles';
   animations = [
     { target: 'header', delay: 500 },
     { target: '.anime-logo-2', delay: 600 },
     { target: '.anime-logo-1', delay: 700 }
   ];
 
-  constructor(private gameTurns: GameTurnsService, private soloModeService: SoloGamemodeService) {}
+  private static TILES_KEY = 'gameTiles';
+
+  constructor(
+    private gameTurns: GameTurnsService,
+    private soloModeService: SoloGamemodeService,
+    private gameOutcomeService: GameOutcomeService
+  ) {}
 
   ngOnInit() {
     this.loadTilesFromLocalStorage();
@@ -84,6 +91,15 @@ export class GameBoardComponent {
       this.saveTilesToLocalStorage();
       this.soloModeService.makeChoice();
 
+      const outcome = this.gameOutcomeService.determineOutcome(this.tiles, this.playerChoice!, this.cpuChoice!);
+      this.winningPositions = outcome.winningPositions;
+
+      if (outcome.outcome !== 'Game ongoing') {
+        setTimeout(() => {
+          alert(outcome.outcome);
+        }, 3000);
+      }
+
       if (this.soloModeService.isCPUTurn()) {
         setTimeout(() => {
           this.makeCpuMove();
@@ -98,6 +114,15 @@ export class GameBoardComponent {
       this.tiles[move] = this.cpuChoice!;
       this.saveTilesToLocalStorage();
       this.soloModeService.makeChoice(true);
+
+      const outcome = this.gameOutcomeService.determineOutcome(this.tiles, this.playerChoice!, this.cpuChoice!);
+      this.winningPositions = outcome.winningPositions;
+
+      if (outcome.outcome !== 'Game ongoing') {
+        setTimeout(() => {
+          alert(outcome.outcome);
+        }, 3000);
+      }
     }
   }
 
@@ -110,5 +135,16 @@ export class GameBoardComponent {
 
   private saveTilesToLocalStorage(): void {
     localStorage.setItem(GameBoardComponent.TILES_KEY, JSON.stringify(this.tiles));
+  }
+
+  getTileClass(index: number): string {
+    if (this.winningPositions && this.winningPositions.includes(index)) {
+      if (this.tiles[index] === 'x') {
+        return 'bg-turquoise text-mirage w-full h-full shadow-inner-bottom';
+      } else if (this.tiles[index] === 'o') {
+        return 'bg-saffron text-mirage w-full h-full shadow-inner-bottom';
+      }
+    }
+    return this.tiles[index] === 'x' ? 'text-turquoise' : 'text-saffron';
   }
 }

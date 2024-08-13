@@ -15,13 +15,13 @@
   <section class="flex flex-col gap-y-[1rem]">
     <div class="grid grid-cols-3 gap-4 *:h-[8.75rem] *:bg-tepapagreen *:shadow-inner-bottom *:rounded-[.625rem] *:text-center *:cursor-pointer mark-container">
       @for(tile of tiles; track tile; let i = $index){
-        <div class="mark-tile flex items-center justify-center" (click)="makeChoice(i)">
+        <div class="mark-tile flex items-center justify-center font-varelaround font-black text-[5rem] mb-3 *:rounded-[.625rem] " (click)="makeChoice(i)">
           @if(tile === 'x'){
-            <div class="font-varelaround font-black text-[5rem] mb-3 text-turquoise ">
+            <div [ngClass]="getTileClass(i)">
               x
             </div>
           } @else if ( tile === 'o' ) {
-            <div class="font-varelaround font-black text-[5rem] mb-3 text-saffron">
+            <div [ngClass]="getTileClass(i)">
               o
             </div>
           }
