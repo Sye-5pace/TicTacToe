@@ -4,11 +4,15 @@ import anime from 'animejs/lib/anime.es.js';
 import { SoloGamemodeService } from '../../services/solo-gamemode.service';
 import { GameTurnsService } from '../../services/game-turns.service';
 import { GameOutcomeService } from '../../services/game-outcome.service';
+import { ModalService } from '../../services/modal.service';
+import { RestartModalComponent } from '../../components/restart-modal/restart-modal.component';
+
+
 
 @Component({
   selector: 'app-game-board',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RestartModalComponent],
   templateUrl: './game-board.component.html',
   styleUrls: ['./game-board.component.css']
 })
@@ -30,6 +34,7 @@ export class GameBoardComponent {
   constructor(
     private gameTurns: GameTurnsService,
     private soloModeService: SoloGamemodeService,
+    private modalService: ModalService,
     private gameOutcomeService: GameOutcomeService
   ) {}
 
@@ -146,5 +151,15 @@ export class GameBoardComponent {
       }
     }
     return this.tiles[index] === 'x' ? 'text-turquoise' : 'text-saffron';
+  }
+
+  public resetGame() {
+    this.tiles = Array(9).fill(null)
+    this.saveTilesToLocalStorage();
+    this.soloModeService.resetGame();
+  }
+
+  displayModal(){
+    this.modalService.displayModal()
   }
 }
