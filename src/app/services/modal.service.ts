@@ -4,18 +4,28 @@ import { BehaviorSubject } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-
 export class ModalService {
-  public visibilitySubject = new BehaviorSubject<boolean>(false);
-  visibilityControl$ = this.visibilitySubject.asObservable();
+  private restartModalSubject = new BehaviorSubject<boolean>(false);
+  private resultModalSubject = new BehaviorSubject<boolean>(false);
 
-  constructor() { }
+  restartModalVisibility$ = this.restartModalSubject.asObservable();
+  resultModalVisibility$ = this.resultModalSubject.asObservable();
 
-  displayModal(): void{
-    this.visibilitySubject.next(true);
+  constructor() {}
+
+  showRestartModal(): void {
+    this.restartModalSubject.next(true);
   }
 
-  hideModal(): void{
-    this.visibilitySubject.next(false);
+  hideRestartModal(): void {
+    this.restartModalSubject.next(false);
+  }
+
+  showResultModal(): void {
+    this.resultModalSubject.next(true);
+  }
+
+  hideResultModal(): void {
+    this.resultModalSubject.next(false);
   }
 }

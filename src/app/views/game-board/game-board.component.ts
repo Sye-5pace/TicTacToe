@@ -6,13 +6,12 @@ import { GameTurnsService } from '../../services/game-turns.service';
 import { GameOutcomeService } from '../../services/game-outcome.service';
 import { ModalService } from '../../services/modal.service';
 import { RestartModalComponent } from '../../components/restart-modal/restart-modal.component';
-
-
+import { ResultModalComponent } from '../../components/reusables/result-modal/result-modal.component';
 
 @Component({
   selector: 'app-game-board',
   standalone: true,
-  imports: [CommonModule, RestartModalComponent],
+  imports: [CommonModule, RestartModalComponent, ResultModalComponent],
   templateUrl: './game-board.component.html',
   styleUrls: ['./game-board.component.css']
 })
@@ -22,6 +21,7 @@ export class GameBoardComponent {
   playerChoice: string | null = '';
   turn$ = this.soloModeService.turn$;
   winningPositions: number[] | null = null;
+  result!: string;
 
   animations = [
     { target: 'header', delay: 500 },
@@ -59,7 +59,7 @@ export class GameBoardComponent {
   ngAfterViewInit() {
     const timeline = anime.timeline({
       duration: 800,
-    })
+    });
 
     this.animations.forEach(({ target, delay }) => {
       timeline.add({
@@ -68,8 +68,9 @@ export class GameBoardComponent {
         translateX: [-400, 0],
         offset: delay,
         opacity: [0, 1],
-      })
+      });
     });
+
     timeline.add({
       targets: '.mark-container .mark-tile',
       translateX: [400, 0],
@@ -78,13 +79,14 @@ export class GameBoardComponent {
       delay: anime.stagger(100),
       offset: '+=50'
     });
+
     timeline.add({
       targets: '.score-bar',
       translateY: [150, 0],
       easing: 'easeOutQuad',
       opacity: [0, 1],
       offset: '+=200'
-    })
+    });
   }
 
   makeChoice(index: number): void {
@@ -98,12 +100,10 @@ export class GameBoardComponent {
 
       const outcome = this.gameOutcomeService.determineOutcome(this.tiles, this.playerChoice!, this.cpuChoice!);
       this.winningPositions = outcome.winningPositions;
-
-      if (outcome.outcome !== 'Game ongoing') {
-        setTimeout(() => {
-          alert(outcome.outcome);
-        }, 3000);
-      }
+      this.result = outcome.outcome;
+      setTimeout(() => {
+        this.showResultModal();
+      },4000)
 
       if (this.soloModeService.isCPUTurn()) {
         setTimeout(() => {
@@ -122,12 +122,10 @@ export class GameBoardComponent {
 
       const outcome = this.gameOutcomeService.determineOutcome(this.tiles, this.playerChoice!, this.cpuChoice!);
       this.winningPositions = outcome.winningPositions;
-
-      if (outcome.outcome !== 'Game ongoing') {
-        setTimeout(() => {
-          alert(outcome.outcome);
-        }, 3000);
-      }
+      this.result = outcome.outcome;
+      setTimeout(() => {
+        this.showResultModal();
+      },4000)
     }
   }
 
@@ -154,12 +152,18 @@ export class GameBoardComponent {
   }
 
   public resetGame() {
-    this.tiles = Array(9).fill(null)
+    this.tiles = Array(9).fill(null);
     this.saveTilesToLocalStorage();
     this.soloModeService.resetGame();
   }
 
-  displayModal(){
-    this.modalService.displayModal()
+  displayModal() {
+    this.modalService.showRestartModal();
+  }
+
+  showResultModal() {
+    if (this.result !== 'Game ongoing') {
+      this.modalService.showResultModal();
+    }
   }
 }

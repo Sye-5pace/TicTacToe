@@ -1,0 +1,45 @@
+<div class="absolute inset-0 bg-[#000] bg-opacity-50 z-10 flex items-center"   [class]="showResult ? 'flex':'hidden'">
+  <section class="bg-tepapagreen h-[16.625rem] w-full flex flex-col justify-center items-center">
+  @switch(result){
+    @case("Player wins!"){
+      <p class="font-bold text-casper">You won</p>
+      <div class="flex items-center flex-col gap-[1.9375rem]">
+      <div>
+        <p class="text-[2.5rem] font-bold text-turquoise"> TAKES THE ROUND</p>
+      </div>
+        <app-reusable-button
+        [buttonName1]="'QUIT'"
+        [buttonName2]="'NEXT ROUND'"
+        [buttonEvent1]="quit.bind(this)"
+        [buttonEvent2]="replay.bind(this)"
+      />
+      </div>
+    }
+    @case("CPU wins!"){
+      <p class="text-casper font-bold">OH NO, YOU LOST...</p>
+      <div class="flex items-center flex-col gap-[1.9375rem]">
+      <div>
+        <p class="text-[2.5rem] font-bold text-saffron"> TAKES THE ROUND</p>
+      </div>
+        <app-reusable-button
+        [buttonName1]="'QUIT'"
+        [buttonName2]="'NEXT ROUND'"
+        [buttonEvent1]="quit.bind(this)"
+        [buttonEvent2]="replay.bind(this)"
+      />
+      </div>
+    }
+    @case("Draw!"){
+       <div class="flex items-center flex-col gap-[1.9375rem]">
+         <p class="text-[2.5rem] font-bold text-casper"> ROUND TIED</p>
+         <app-reusable-button
+         [buttonName1]="'QUIT'"
+         [buttonName2]="'NEXT ROUND'"
+         [buttonEvent1]="quit.bind(this)"
+         [buttonEvent2]="replay.bind(this)"
+          />
+       </div>
+      }
+    }
+  </section>
+</div>
