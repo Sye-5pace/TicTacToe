@@ -1,0 +1,51 @@
+<div class="absolute inset-0 bg-[#000] bg-opacity-50 z-10 flex items-center"   [class]="showResult ? 'flex':'hidden'">
+  <section class="bg-tepapagreen h-[16.625rem] w-full flex flex-col justify-center items-center pb-8">
+  @switch(result){
+    @case("Player wins!"){
+      <p class="font-bold text-casper mt-[3rem]">You won</p>
+      <div class="flex items-center flex-col">
+        <div class="flex gap-6 items-center text-turquoise">
+          <h2 class="text-[5rem] font-black font-varelaround mb-1">
+            {{ playerChoice }}
+          </h2>
+          <p class="text-[2rem] font-bold "> TAKES THE ROUND</p>
+        </div>
+          <app-reusable-button
+          [buttonName1]="'QUIT'"
+          [buttonName2]="'NEXT ROUND'"
+          [buttonEvent1]="quit.bind(this)"
+          [buttonEvent2]="replay.bind(this)"
+        />
+      </div>
+    }
+    @case("CPU wins!"){
+      <p class="text-casper font-bold mt-[3rem]">OH NO, YOU LOST...</p>
+      <div class="flex items-center flex-col">
+        <div class="flex gap-6 text-saffron items-center">
+          <h2 class="text-[5rem] font-black font-varelaround mb-1">
+            {{ cpuChoice }}
+          </h2>
+          <p class="text-[2rem] font-bold text-saffron"> TAKES THE ROUND</p>
+        </div>
+        <app-reusable-button
+          [buttonName1]="'QUIT'"
+          [buttonName2]="'NEXT ROUND'"
+          [buttonEvent1]="quit.bind(this)"
+          [buttonEvent2]="replay.bind(this)"
+        />
+      </div>
+    }
+    @case("Draw!"){
+       <div class="flex items-center flex-col gap-[1.5rem]">
+         <p class="text-[2.5rem] font-bold text-casper"> ROUND TIED</p>
+         <app-reusable-button
+         [buttonName1]="'QUIT'"
+         [buttonName2]="'NEXT ROUND'"
+         [buttonEvent1]="quit.bind(this)"
+         [buttonEvent2]="replay.bind(this)"
+          />
+       </div>
+      }
+    }
+  </section>
+</div>

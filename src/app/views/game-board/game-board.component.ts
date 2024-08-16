@@ -6,7 +6,7 @@ import { GameTurnsService } from '../../services/game-turns.service';
 import { GameOutcomeService } from '../../services/game-outcome.service';
 import { ModalService } from '../../services/modal.service';
 import { RestartModalComponent } from '../../components/restart-modal/restart-modal.component';
-import { ResultModalComponent } from '../../components/reusables/result-modal/result-modal.component';
+import { ResultModalComponent } from '../../components/result-modal/result-modal.component';
 
 @Component({
   selector: 'app-game-board',
@@ -22,6 +22,7 @@ export class GameBoardComponent {
   turn$ = this.soloModeService.turn$;
   winningPositions: number[] | null = null;
   result!: string;
+  
 
   animations = [
     { target: 'header', delay: 500 },
@@ -52,7 +53,7 @@ export class GameBoardComponent {
     if (this.soloModeService.isCPUTurn()) {
       setTimeout(() => {
         this.makeCpuMove();
-      }, 500);
+      }, 5000);
     }
   }
 
