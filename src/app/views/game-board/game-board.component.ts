@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import anime from 'animejs/lib/anime.es.js';
 import { SoloGamemodeService } from '../../services/solo-gamemode.service';
@@ -7,6 +7,7 @@ import { GameOutcomeService } from '../../services/game-outcome.service';
 import { ModalService } from '../../services/modal.service';
 import { RestartModalComponent } from '../../components/restart-modal/restart-modal.component';
 import { ResultModalComponent } from '../../components/result-modal/result-modal.component';
+import { ScoreService } from '../../services/score.service'; // New service for handling scores
 
 @Component({
   selector: 'app-game-board',
@@ -15,14 +16,17 @@ import { ResultModalComponent } from '../../components/result-modal/result-modal
   templateUrl: './game-board.component.html',
   styleUrls: ['./game-board.component.css']
 })
-export class GameBoardComponent {
+export class GameBoardComponent implements OnInit, AfterViewInit {
   tiles: string[] = Array(9).fill(null);
   cpuChoice: string | null = '';
   playerChoice: string | null = '';
   turn$ = this.soloModeService.turn$;
   winningPositions: number[] | null = null;
   result!: string;
-  
+
+  playerScore!: number;
+  cpuScore!: number;
+  tiesScore!: number;
 
   animations = [
     { target: 'header', delay: 500 },
@@ -36,7 +40,8 @@ export class GameBoardComponent {
     private gameTurns: GameTurnsService,
     private soloModeService: SoloGamemodeService,
     private modalService: ModalService,
-    private gameOutcomeService: GameOutcomeService
+    private gameOutcomeService: GameOutcomeService,
+    private scoreService: ScoreService
   ) {}
 
   ngOnInit() {
@@ -55,6 +60,12 @@ export class GameBoardComponent {
         this.makeCpuMove();
       }, 5000);
     }
+
+    // Load scores using ScoreService
+    this.scoreService.loadScores();
+    this.scoreService.playerScore$.subscribe(score => this.playerScore = score);
+    this.scoreService.cpuScore$.subscribe(score => this.cpuScore = score);
+    this.scoreService.tiesScore$.subscribe(score => this.tiesScore = score);
   }
 
   ngAfterViewInit() {
@@ -102,9 +113,10 @@ export class GameBoardComponent {
       const outcome = this.gameOutcomeService.determineOutcome(this.tiles, this.playerChoice!, this.cpuChoice!);
       this.winningPositions = outcome.winningPositions;
       this.result = outcome.outcome;
+
       setTimeout(() => {
         this.showResultModal();
-      },4000)
+      }, 4000);
 
       if (this.soloModeService.isCPUTurn()) {
         setTimeout(() => {
@@ -124,9 +136,11 @@ export class GameBoardComponent {
       const outcome = this.gameOutcomeService.determineOutcome(this.tiles, this.playerChoice!, this.cpuChoice!);
       this.winningPositions = outcome.winningPositions;
       this.result = outcome.outcome;
+
       setTimeout(() => {
         this.showResultModal();
-      },4000)
+        this.updateScores();
+      }, 4000);
     }
   }
 
@@ -165,6 +179,11 @@ export class GameBoardComponent {
   showResultModal() {
     if (this.result !== 'Game ongoing') {
       this.modalService.showResultModal();
+      this.updateScores();
     }
+  }
+
+  updateScores() {
+    this.scoreService.updateScores(this.result);
   }
 }
