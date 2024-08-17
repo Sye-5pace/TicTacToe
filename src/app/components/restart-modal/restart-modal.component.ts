@@ -34,7 +34,7 @@ export class RestartModalComponent implements OnDestroy {
   }
 
   resetGame() {
-    this.gameBoard.resetGame();
+    this.gameBoard.restartGame();
     this.hideModal();
   }
 

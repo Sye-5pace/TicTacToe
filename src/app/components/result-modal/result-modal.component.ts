@@ -1,3 +1,4 @@
+import { ScoreService } from './../../services/score.service';
 import { Component, Input } from '@angular/core';
 import { ReusableButtonComponent } from '../reusables/reusable-button/reusable-button.component';
 import { ModalService } from '../../services/modal.service';
@@ -5,6 +6,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { Router } from '@angular/router';
 import { GameBoardComponent } from '../../views/game-board/game-board.component';
 import { GameTurnsService } from '../../services/game-turns.service';
+import { SoloGamemodeService } from '../../services/solo-gamemode.service';
 
 @Component({
   selector: 'app-result-modal',
@@ -25,7 +27,9 @@ export class ResultModalComponent {
     private modalService: ModalService,
     private gameBoard: GameBoardComponent,
     private router: Router,
-    private gameTurn: GameTurnsService
+    private gameTurn: GameTurnsService,
+    private scoreService: ScoreService
+
   ){}
 
   ngOnInit() {
@@ -46,13 +50,14 @@ export class ResultModalComponent {
   }
 
   quit() {
-    this.gameBoard.resetGame();
+    this.gameBoard.quitGame();
+    this.scoreService.resetScores()
     this.modalService.hideResultModal();
     this.router.navigate(['/']);
   }
 
   replay() {
-    this.gameBoard.resetGame();
+    this.gameBoard.replay();
     this.modalService.hideResultModal();
   }
 }

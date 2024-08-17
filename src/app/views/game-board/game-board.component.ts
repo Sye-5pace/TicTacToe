@@ -159,10 +159,26 @@ export class GameBoardComponent implements OnInit, AfterViewInit {
     return this.tiles[index] === 'x' ? 'text-turquoise' : 'text-saffron';
   }
 
-  public resetGame() {
+  public replay() {
     this.tiles = Array(9).fill(null);
     this.saveTilesToLocalStorage();
-    this.soloModeService.resetGame();
+  }
+
+  restartGame(){
+    this.tiles = Array(9).fill(null);
+    this.saveTilesToLocalStorage();
+  }
+
+  quitGame(){
+    this.tiles = Array(9).fill(null);
+    this.saveTilesToLocalStorage();
+    this.result = 'Game ongoing';
+    this.winningPositions = null;
+    this.playerChoice = null;
+    this.cpuChoice = null;
+    this.scoreService.resetScores();
+    this.modalService.hideRestartModal();
+    this.modalService.hideResultModal();
   }
 
   displayModal() {

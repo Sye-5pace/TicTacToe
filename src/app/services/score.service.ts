@@ -12,7 +12,6 @@ export class ScoreService {
   playerScore$ = this.playerScore.asObservable();
   cpuScore$ = this.cpuScore.asObservable();
   tiesScore$ = this.tiesScore.asObservable();
-  scores$: any;
 
   loadScores(): void {
     this.playerScore.next(parseInt(localStorage.getItem('playerScore') || '0', 10));
@@ -21,26 +20,40 @@ export class ScoreService {
   }
 
   updateScores(result: string): void {
-    let updated = false;
+    switch (result) {
+      case 'Player wins!':
+        const newPlayerScore = this.playerScore.value + 4;
+        this.playerScore.next(newPlayerScore);
+        localStorage.setItem('playerScore', newPlayerScore.toString());
+        break;
 
-    if (result === 'Player wins!') {
-      const newPlayerScore = this.playerScore.value + 4;
-      this.playerScore.next(newPlayerScore);
-      localStorage.setItem('playerScore', newPlayerScore.toString());
-      updated = true;
-    } else if (result === 'CPU wins!') {
-      const newCpuScore = this.cpuScore.value + 4;
-      this.cpuScore.next(newCpuScore);
-      localStorage.setItem('cpuScore', newCpuScore.toString());
-      updated = true;
-    } else if (result === 'Draw!') {
-      const newTiesScore = this.tiesScore.value + 1;
-      this.tiesScore.next(newTiesScore);
-      localStorage.setItem('ties', newTiesScore.toString());
-      updated = true;
+      case 'CPU wins!':
+        const newCpuScore = this.cpuScore.value + 4;
+        this.cpuScore.next(newCpuScore);
+        localStorage.setItem('cpuScore', newCpuScore.toString());
+        break;
+
+      case 'Draw!':
+        const newTiesScore = this.tiesScore.value + 1;
+        this.tiesScore.next(newTiesScore);
+        localStorage.setItem('ties', newTiesScore.toString());
+        break;
+
+      default:
+        break;
     }
   }
 
+
+  resetScores(): void {
+    this.playerScore.next(0);
+    this.cpuScore.next(0);
+    this.tiesScore.next(0);
+
+    localStorage.setItem('playerScore', '0');
+    localStorage.setItem('cpuScore', '0');
+    localStorage.setItem('ties', '0');
+  }
 
   getPlayerScore(): number {
     return this.playerScore.value;
