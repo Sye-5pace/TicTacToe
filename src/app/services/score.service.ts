@@ -39,14 +39,6 @@ export class ScoreService {
       localStorage.setItem('ties', newTiesScore.toString());
       updated = true;
     }
-
-    if (updated) {
-      console.log('Scores updated:', {
-        player: this.playerScore.value,
-        cpu: this.cpuScore.value,
-        ties: this.tiesScore.value,
-      });
-    }
   }
 
 
