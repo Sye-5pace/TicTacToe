@@ -12,6 +12,7 @@ export class ScoreService {
   playerScore$ = this.playerScore.asObservable();
   cpuScore$ = this.cpuScore.asObservable();
   tiesScore$ = this.tiesScore.asObservable();
+  scores$: any;
 
   loadScores(): void {
     this.playerScore.next(parseInt(localStorage.getItem('playerScore') || '0', 10));
@@ -20,20 +21,34 @@ export class ScoreService {
   }
 
   updateScores(result: string): void {
+    let updated = false;
+
     if (result === 'Player wins!') {
       const newPlayerScore = this.playerScore.value + 4;
       this.playerScore.next(newPlayerScore);
       localStorage.setItem('playerScore', newPlayerScore.toString());
+      updated = true;
     } else if (result === 'CPU wins!') {
       const newCpuScore = this.cpuScore.value + 4;
       this.cpuScore.next(newCpuScore);
       localStorage.setItem('cpuScore', newCpuScore.toString());
-    } else if (result === 'Draws!') {
+      updated = true;
+    } else if (result === 'Draw!') {
       const newTiesScore = this.tiesScore.value + 1;
       this.tiesScore.next(newTiesScore);
       localStorage.setItem('ties', newTiesScore.toString());
+      updated = true;
+    }
+
+    if (updated) {
+      console.log('Scores updated:', {
+        player: this.playerScore.value,
+        cpu: this.cpuScore.value,
+        ties: this.tiesScore.value,
+      });
     }
   }
+
 
   getPlayerScore(): number {
     return this.playerScore.value;

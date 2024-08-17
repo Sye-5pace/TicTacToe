@@ -113,10 +113,7 @@ export class GameBoardComponent implements OnInit, AfterViewInit {
       const outcome = this.gameOutcomeService.determineOutcome(this.tiles, this.playerChoice!, this.cpuChoice!);
       this.winningPositions = outcome.winningPositions;
       this.result = outcome.outcome;
-
-      setTimeout(() => {
-        this.showResultModal();
-      }, 4000);
+      // this.handleGameOutcome();
 
       if (this.soloModeService.isCPUTurn()) {
         setTimeout(() => {
@@ -136,11 +133,7 @@ export class GameBoardComponent implements OnInit, AfterViewInit {
       const outcome = this.gameOutcomeService.determineOutcome(this.tiles, this.playerChoice!, this.cpuChoice!);
       this.winningPositions = outcome.winningPositions;
       this.result = outcome.outcome;
-
-      setTimeout(() => {
-        this.showResultModal();
-        this.updateScores();
-      }, 4000);
+      this.handleGameOutcome();
     }
   }
 
@@ -176,14 +169,29 @@ export class GameBoardComponent implements OnInit, AfterViewInit {
     this.modalService.showRestartModal();
   }
 
-  showResultModal() {
-    if (this.result !== 'Game ongoing') {
-      this.modalService.showResultModal();
-      this.updateScores();
+  private handleGameOutcome() {
+    if (this.result === 'Draw!') {
+      this.updateDraw();
+      console.log(this.tiesScore)
+    } else if (this.result === 'Player wins!' || this.result === 'CPU wins!') {
+      this.scoreService.updateScores(this.result);
+      setTimeout(() => {
+        this.showResultModal();
+      }, 3000);
     }
   }
 
-  updateScores() {
-    this.scoreService.updateScores(this.result);
+  showResultModal() {
+    if (this.result !== 'Game ongoing') {
+      this.modalService.showResultModal();
+    }
   }
+
+  updateDraw(){
+    this.scoreService.updateScores(this.result)
+    setTimeout(() => {
+      this.showResultModal();
+    }, 3000)
+  }
+
 }
